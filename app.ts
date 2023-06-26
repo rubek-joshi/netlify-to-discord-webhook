@@ -84,9 +84,8 @@ const generateMessage = (body: NetlifyEventBody) => {
 };
 
 // Declare a route
-fastify.get("/", async (request, reply) => {
-  console.log(fastify.config);
-  return { hello: "world" };
+fastify.get("/healthz", async (request, reply) => {
+  reply.code(200).send({ message: "Breathing..." });
 });
 
 fastify.post("/netlify-hook", async (request, reply) => {
