@@ -74,7 +74,7 @@ const generateMessage = (body: NetlifyEventBody) => {
         url: body.state === NetlifyStates.READY ? body.url : buildLogUrl,
         description:
           body.state === NetlifyStates.READY ? buildLogDescription : "",
-        timestamp: new Date().toDateString(),
+        timestamp: new Date().toISOString(),
         footer: {
           text: `Using git branch ${body.branch}`,
         },
