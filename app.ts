@@ -2,9 +2,7 @@ import { WebhookClient } from "discord.js";
 import Fastify from "fastify";
 import { verify } from "jsonwebtoken";
 
-const fastify = Fastify({
-  logger: true,
-});
+const fastify = Fastify({ logger: true });
 
 interface NetlifyEventBody {
   id: string;
@@ -100,6 +98,8 @@ fastify.post("/netlify-hook", async (request, reply) => {
     );
   } catch (error) {
     console.log(error);
+
+    fastify.Sentry.captureMessage("Unable to verify secret key");
     reply.code(200).send({ err: "Unable to verify secret key" });
   }
 
@@ -116,7 +116,9 @@ fastify.post("/netlify-hook", async (request, reply) => {
 
     reply.code(200).send({ message: "Success" });
   } catch (error) {
-    reply.code(200).send({ err: "Unable to verify secret key" });
+    fastify.Sentry.captureMessage("Unable to send via discord webhook client");
+
+    reply.code(200).send({ err: "Unable to send via discord webhook client" });
   }
 });
 

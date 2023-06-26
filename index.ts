@@ -1,4 +1,5 @@
 import { fastifyEnv } from "@fastify/env";
+import fastifySentry from "@immobiliarelabs/fastify-sentry";
 import fastify from "./app";
 
 declare module "fastify" {
@@ -6,23 +7,27 @@ declare module "fastify" {
     config: {
       WEBHOOK_SECRET: string;
       DISCORD_WEBHOOK_URL: string;
+      SENTRY_DSN: string;
     };
   }
 }
 
 const schema = {
   type: "object",
-  required: ["WEBHOOK_SECRET", "DISCORD_WEBHOOK_URL"],
+  required: ["WEBHOOK_SECRET", "DISCORD_WEBHOOK_URL", "SENTRY_DSN"],
   properties: {
     WEBHOOK_SECRET: { type: "string" },
     DISCORD_WEBHOOK_URL: { type: "string" },
+    SENTRY_DSN: { type: "string" },
   },
 };
 
 const start = async () => {
   try {
+    await fastify.register(fastifyEnv, { schema, dotenv: true });
+
     await fastify
-      .register(fastifyEnv, { schema, dotenv: true })
+      .register(fastifySentry, { dsn: fastify.config.SENTRY_DSN })
       .listen({ port: 3000 });
   } catch (err) {
     fastify.log.error(err);
