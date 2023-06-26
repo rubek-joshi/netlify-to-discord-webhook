@@ -28,7 +28,10 @@ const start = async () => {
 
     await fastify
       .register(fastifySentry, { dsn: fastify.config.SENTRY_DSN })
-      .listen({ port: 3000 });
+      .listen({
+        host: "RENDER" in process.env ? "0.0.0.0" : "localhost",
+        port: 3000,
+      });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
