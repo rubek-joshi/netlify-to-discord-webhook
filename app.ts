@@ -70,13 +70,16 @@ const generateMessage = (body: NetlifyEventBody) => {
     embeds: [
       {
         color: Number(getValueByKey(ColorMapping, body.state)) || undefined,
-        title: getValueByKey(TitleMapping, body.state),
-        url: body.state === NetlifyStates.READY ? body.deploy_ssl_url : buildLogUrl,
+        title: body.state === NetlifyStates.READY ? `Visit [${body.branch}] changes live here` : getValueByKey(TitleMapping, body.state),
+        url:
+          body.state === NetlifyStates.READY
+            ? body.deploy_ssl_url
+            : buildLogUrl,
         description:
           body.state === NetlifyStates.READY ? buildLogDescription : "",
         timestamp: new Date().toISOString(),
         footer: {
-          text: `Using git branch ${body.branch}`,
+          text: `Deploy URL: ${body.deploy_ssl_url}`,
         },
       },
     ],
