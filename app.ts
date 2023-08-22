@@ -70,7 +70,7 @@ const generateMessage = (body: NetlifyEventBody) => {
     embeds: [
       {
         color: Number(getValueByKey(ColorMapping, body.state)) || undefined,
-        title: body.state === NetlifyStates.READY ? `Visit [${body.branch}] changes live here` : getValueByKey(TitleMapping, body.state),
+        title: body.state === NetlifyStates.READY ? `Visit ${body.name} [${body.branch} branch] changes live here` : getValueByKey(TitleMapping, body.state),
         url:
           body.state === NetlifyStates.READY
             ? body.deploy_ssl_url
